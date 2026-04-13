@@ -18,7 +18,7 @@ export default function NavBar() {
     <nav
       className={`fixed top-0 left-0 w-full z-50 px-6 py-4 transition-all duration-300 ${
         scrolled
-          ? "bg-gray-950/80 backdrop-blur-md border-b border-gray-800"
+          ? "bg-[#3F3F3F]/80 backdrop-blur-md border-b border-gray-900"
           : "bg-transparent border-b border-transparent"
       }`}
     >
@@ -46,7 +46,7 @@ export default function NavBar() {
           </Link>
           <Link
             href="/login"
-            className="text-sm px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:border-[#749466] hover:text-white transition-colors"
+            className="text-sm px-4 py-2 rounded-lg bg-[#232470] text-gray-300 hover:bg-white hover:text-[#232470] transition-colors"
           >
             LOG IN
           </Link>

@@ -8,6 +8,8 @@ import PublicLayout from "@/components/PublicLayout";
 
 export default function Signup() {
   const router = useRouter();
+  const [fullName, setFullName] = useState("");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -30,7 +32,15 @@ export default function Signup() {
 
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+        },
+      },
+    });
 
     if (error) {
       setError(error.message);
@@ -69,6 +79,19 @@ export default function Signup() {
 
             {/* Form */}
             <form onSubmit={handleSignup} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-gray-400 text-xs font-medium">
+                  Full name
+                </label>
+                <input
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="John Doe"
+                  required
+                  className="bg-[#1E1E1E] border border-gray-700 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-[#323371] transition-colors placeholder:text-gray-600"
+                />
+              </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-gray-400 text-xs font-medium">
                   Email

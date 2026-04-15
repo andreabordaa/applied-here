@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import StatCards from "@/components/StatCards";
+import FunnelChart from "@/components/FunnelChart";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -62,7 +63,8 @@ export default function Dashboard() {
       <main className="flex-1 overflow-y-auto p-8">
         <h1 className="text-white text-2xl font-semibold mb-8">Dashboard</h1>
         <StatCards applications={applications} />
-        <p className="text-gray-400 text-sm">Funnel chart coming next...</p>
+        <FunnelChart applications={applications} />
+        <p className="text-gray-400 text-sm">Pipeline view coming next...</p>
       </main>
     </div>
   );

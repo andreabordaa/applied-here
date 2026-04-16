@@ -15,18 +15,21 @@ export default function PipelineView({ applications }) {
       <h2 className="text-white text-base font-semibold mb-6">Pipeline View</h2>
 
       {/* Columns */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-5 gap-2">
         {COLUMNS.map((col) => {
           const cards = getByStatus(col.label);
 
           return (
-            <div key={col.label} className="flex flex-col gap-3">
+            <div
+              key={col.label}
+              className="flex flex-col gap-3 bg-[#2B2B2B]/50 p-4 rounded-xl"
+            >
               <div className="flex items-center gap-2">
                 <div
                   className="w-2 h-2 rounded-full shrink-0"
                   style={{ backgroundColor: col.color }}
                 />
-                <span className="text-gray-400 text-xs font-medium">
+                <span className="text-gray-200 text-xs font-medium">
                   {col.label}
                 </span>
                 <span className="ml-auto text-gray-400 text-xs">
@@ -55,12 +58,12 @@ export default function PipelineView({ applications }) {
                       {/* Location + date */}
                       <div className="flex items-center justify-between mt-1">
                         {app.location && (
-                          <span className="text-gray-600 text-xs truncate">
+                          <span className="text-gray-500 text-xs truncate">
                             {app.location}
                           </span>
                         )}
                         {app.date_applied && (
-                          <span className="text-gray-600 text-xs ml-auto shrink-0">
+                          <span className="text-gray-500 text-xs ml-auto shrink-0">
                             {new Date(app.date_applied).toLocaleDateString(
                               "en-US",
                               {

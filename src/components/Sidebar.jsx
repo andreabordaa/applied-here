@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 
 import { GoHomeFill } from "react-icons/go";
@@ -23,6 +23,7 @@ const STATUS_DOTS = [
 
 export default function Sidebar({ user, profile }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(true);
 
   const handleLogout = async () => {
@@ -65,7 +66,11 @@ export default function Sidebar({ user, profile }) {
         )}
         <Link
           href="/dashboard"
-          className="flex items-center gap-3 px-2.5 py-2 rounded-lg bg-white/10 text-white"
+          className={`flex items-center gap-3 px-2.5 py-2 rounded-lg transition-colors ${
+            pathname === "/dashboard"
+              ? "bg-white/10 text-white"
+              : "text-gray-400 hover:text-white hover:bg-white/5"
+          }`}
         >
           <GoHomeFill size={18} className="shrink-0" />
           {isOpen && (
@@ -77,7 +82,11 @@ export default function Sidebar({ user, profile }) {
 
         <Link
           href="/dashboard/applications"
-          className="flex items-center gap-3 px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+          className={`flex items-center gap-3 px-2.5 py-2 rounded-lg transition-colors ${
+            pathname === "/dashboard/applications"
+              ? "bg-white/10 text-white"
+              : "text-gray-400 hover:text-white hover:bg-white/5"
+          }`}
         >
           <MdFormatListBulleted size={18} className="shrink-0" />
           {isOpen && (

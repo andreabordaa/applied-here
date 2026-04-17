@@ -8,7 +8,7 @@ const COLUMNS = [
 
 export default function PipelineView({ applications }) {
   const getByStatus = (status) =>
-    applications.filter((app) => app.status === status);
+    applications.filter((app) => app.status === status).slice(0, 5);
 
   return (
     <div className="bg-[#3F3F3F] border border-gray-700 rounded-2xl p-6 mb-6">

@@ -11,7 +11,9 @@ const STATUS_STYLES = {
 };
 
 export default function ApplicationsTable({ applications }) {
-  const recent = applications.slice(0, 8);
+  const recent = [...applications]
+    .sort((a, b) => new Date(b.date_applied) - new Date(a.date_applied))
+    .slice(0, 5);
 
   return (
     <div className="bg-[#3F3F3F] border border-gray-700 rounded-2xl p-6 mb-6">

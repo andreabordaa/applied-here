@@ -57,7 +57,7 @@ export default function AllApplications() {
         .from("applications")
         .select("*")
         .eq("user_id", session.user.id)
-        .order("created_at", { ascending: false });
+        .order("date_applied", { ascending: false });
 
       setApplications(appsData || []);
       setLoading(false);

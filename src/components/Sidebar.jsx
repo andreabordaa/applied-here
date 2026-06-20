@@ -14,11 +14,11 @@ import {
 } from "react-icons/md";
 
 const STATUS_DOTS = [
-  { label: "Applied", color: "#6AABED" },
-  { label: "Interview", color: "#AD5FDA" },
-  { label: "Challenge", color: "#DBC66A" },
-  { label: "Offer", color: "#72D562" },
-  { label: "Rejected", color: "#DA2C2C" },
+  { label: "Applied", color: "var(--color-status-applied)" },
+  { label: "Interview", color: "var(--color-status-interview)" },
+  { label: "Challenge", color: "var(--color-status-challenge)" },
+  { label: "Offer", color: "var(--color-status-offer)" },
+  { label: "Rejected", color: "var(--color-status-rejected)" },
 ];
 
 export default function Sidebar({ user, profile }) {
@@ -33,43 +33,41 @@ export default function Sidebar({ user, profile }) {
 
   return (
     <aside
-      className={`relative flex flex-col h-full bg-[#1E1E1E] border-r border-gray-700 transition-all duration-300 ${isOpen ? "w-58" : "w-16"}`}
+      className={`relative flex flex-col h-full bg-bg-sidebar border-r border-border-default transition-all duration-300 ${
+        isOpen ? "w-52" : "w-16"
+      }`}
     >
-      {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="absolute -right-3 top-6.75 z-10 w-6 h-6 rounded full bg-[#3A3A3A] border border-gray-600 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        className="absolute -right-3 top-6.75 z-10 w-6 h-6 rounded-full bg-bg-surface border border-border-default flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors"
       >
         {isOpen ? <MdChevronLeft size={14} /> : <MdChevronRight size={14} />}
       </button>
-      {/* Logo */}
-      <div
-        className={`px-4 py-6 border-b border-gray-700 flex items-center gap-3 overflow-hidden`}
-      >
-        {/* Logo icon placeholder — replace src with your actual logo */}
-        <div className="w-7 h-7 rounded bg-[#323371] shrink-0 flex items-center justify-center text-white text-xs font-bold">
+
+      <div className="px-4 py-6 border-b border-border-default flex items-center gap-3 overflow-hidden">
+        <div className="w-7 h-7 rounded bg-accent shrink-0 flex items-center justify-center text-white text-xs font-bold">
           A
         </div>
         {isOpen && (
-          <span className="text-white font-semibold text-sm tracking-tight whitespace-nowrap">
+          <span className="text-text-primary font-semibold text-sm tracking-tight whitespace-nowrap">
             APPLIED<span className="font-normal">HERE</span>
           </span>
         )}
       </div>
-      {/* Nav */}
+
       <nav className="flex flex-col px-3 py-6 gap-1 flex-1 overflow-hidden">
-        {/* Overview */}
         {isOpen && (
-          <p className="text-gray-500 text-xs font-medium mb-2 px-2">
+          <p className="text-text-muted text-xs font-medium mb-2 px-2">
             Overview
           </p>
         )}
+
         <Link
           href="/dashboard"
           className={`flex items-center gap-3 px-2.5 py-2 rounded-lg transition-colors ${
             pathname === "/dashboard"
-              ? "bg-white/10 text-white"
-              : "text-gray-400 hover:text-white hover:bg-white/5"
+              ? "bg-bg-surface text-text-primary"
+              : "text-text-secondary hover:text-text-primary hover:bg-bg-surface/50"
           }`}
         >
           <GoHomeFill size={18} className="shrink-0" />
@@ -84,8 +82,8 @@ export default function Sidebar({ user, profile }) {
           href="/dashboard/applications"
           className={`flex items-center gap-3 px-2.5 py-2 rounded-lg transition-colors ${
             pathname === "/dashboard/applications"
-              ? "bg-white/10 text-white"
-              : "text-gray-400 hover:text-white hover:bg-white/5"
+              ? "bg-bg-surface text-text-primary"
+              : "text-text-secondary hover:text-text-primary hover:bg-bg-surface/50"
           }`}
         >
           <MdFormatListBulleted size={18} className="shrink-0" />
@@ -93,13 +91,14 @@ export default function Sidebar({ user, profile }) {
             <span className="text-sm whitespace-nowrap">All Applications</span>
           )}
         </Link>
-        {/* By Status */}
+
         {isOpen && (
-          <p className="text-gray-500 text-xs font-medium mt-6 mb-2 px-2">
+          <p className="text-text-muted text-xs font-medium mt-6 mb-2 px-2">
             By Status
           </p>
         )}
-        <div className={`flex flex-col gap-1 ${!isOpen ? "mt-4" : "}"}`}>
+
+        <div className={`flex flex-col gap-1 ${!isOpen ? "mt-4" : ""}`}>
           {STATUS_DOTS.map((s) => (
             <div
               key={s.label}
@@ -110,7 +109,7 @@ export default function Sidebar({ user, profile }) {
                 style={{ backgroundColor: s.color }}
               />
               {isOpen && (
-                <span className="text-gray-300 text-sm whitespace-nowrap">
+                <span className="text-text-secondary text-sm whitespace-nowrap">
                   {s.label}
                 </span>
               )}
@@ -119,45 +118,58 @@ export default function Sidebar({ user, profile }) {
         </div>
       </nav>
 
-      {/* User + logout */}
-      <div className="px-3 py-4 border-t border-gray-700">
-        <div
-          className={`flex items-center ${
-            isOpen ? "justify-between" : "justify-center"
-          }`}
-        >
-          {/* LEFT: Avatar + user info */}
-          <div className="flex items-center gap-2 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-[#323371] flex items-center justify-center text-white text-xs font-medium shrink-0">
+      <div className="px-3 py-4 border-t border-border-default">
+        {isOpen ? (
+          // Expanded — avatar + name/email on left, logout on right
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white text-xs font-medium shrink-0">
+                {profile?.full_name?.[0]?.toUpperCase() ||
+                  user?.email?.[0]?.toUpperCase()}
+              </div>
+              <div className="overflow-hidden">
+                <p className="text-text-primary text-xs font-medium truncate">
+                  {profile?.full_name || "User"}
+                </p>
+                <p className="text-text-muted text-xs truncate">
+                  {user?.email}
+                </p>
+              </div>
+            </div>
+
+            <div className="relative group shrink-0">
+              <button
+                onClick={handleLogout}
+                className="text-text-muted hover:text-text-primary transition-colors p-1.5 rounded-lg hover:bg-bg-surface"
+              >
+                <MdLogout size={16} />
+              </button>
+              <div className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-bg-sidebar border border-border-default text-text-primary text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                Log out
+              </div>
+            </div>
+          </div>
+        ) : (
+          // Collapsed — avatar on top, logout icon below, both centered
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white text-xs font-medium shrink-0">
               {profile?.full_name?.[0]?.toUpperCase() ||
                 user?.email?.[0]?.toUpperCase()}
             </div>
 
-            {isOpen && (
-              <div className="overflow-hidden">
-                <p className="text-white text-xs font-medium truncate">
-                  {profile?.full_name || "User"}
-                </p>
-                <p className="text-gray-500 text-xs truncate">{user?.email}</p>
+            <div className="relative group">
+              <button
+                onClick={handleLogout}
+                className="text-text-muted hover:text-text-primary transition-colors p-1.5 rounded-lg hover:bg-bg-surface"
+              >
+                <MdLogout size={16} />
+              </button>
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-bg-sidebar border border-border-default text-text-primary text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                Log out
               </div>
-            )}
-          </div>
-
-          {/* RIGHT: Logout button */}
-          <div className="relative group shrink-0">
-            <button
-              onClick={handleLogout}
-              className="text-gray-500 hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/10"
-            >
-              <MdLogout size={16} />
-            </button>
-
-            {/* Tooltip */}
-            <div className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-[#1E1E1E] border border-gray-600 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-              Log out
             </div>
           </div>
-        </div>
+        )}
       </div>
     </aside>
   );

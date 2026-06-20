@@ -1,70 +1,75 @@
-"use client";
-
-import { useState } from "react";
-
 const STATUS_STYLES = {
-  Applied: "text-[#6AABED] bg-[#6AABED]/10",
-  Interview: "text-[#AD5FDA] bg-[#AD5FDA]/10",
-  Challenge: "text-[#DBC66A] bg-[#DBC66A]/10",
-  Offer: "text-[#72D562] bg-[#72D562]/10",
-  Rejected: "text-[#DA2C2C] bg-[#DA2C2C]/10",
+  Applied: "text-color-status-applied bg-color-status-applied/15",
+  Interview: "text-color-status-interview bg-color-status-interview/15",
+  Challenge: "text-color-status-challenge bg-color-status-challenge/15",
+  Offer: "text-color-status-offer bg-color-status-offer/15",
+  Rejected: "text-color-status-rejected bg-color-status-rejected/15",
 };
 
-export default function ApplicationsTable({ applications }) {
+export default function ApplicationTable({ applications, onAddNew }) {
   const recent = [...applications]
-    .sort((a, b) => new Date(b.date_applied) - new Date(a.date_applied))
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     .slice(0, 5);
 
   return (
-    <div className="bg-[#3F3F3F] border border-gray-700 rounded-2xl p-6 mb-6">
-      {/* Header */}
+    <div className="bg-bg-surface border border-border-default rounded-2xl p-6 mb-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-white text-base font-semibold">
+        <h2 className="text-text-primary text-base font-semibold">
           Recent Applications
         </h2>
+        <button
+          onClick={onAddNew}
+          className="text-sm px-4 py-2 rounded-xl border border-border-default text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors"
+        >
+          + Add new
+        </button>
       </div>
-      <div className="border-t border-gray-700 pt-4">
-        {/* Empty state */}
+
+      <div className="border-t border-border-default pt-4">
         {applications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 gap-3">
-            <p className="text-gray-400 text-sm mb-5">No applications yet</p>
+            <p className="text-text-secondary text-sm">No applications yet</p>
+            <p className="text-text-muted text-xs">
+              Click &quot;+ Add new&quot; to log your first application
+            </p>
           </div>
         ) : (
           <div className="flex flex-col gap-2">
-            <div className="grid grid-cols-12 gap-4 px-3 pb-2">
-              {/* Table header */}
-              <span className="col-span-4 text-gray-500 text-xs font-medium">
+            {/* Table header */}
+            <div className="grid grid-cols-12 gap-3 px-3 pb-2">
+              <span className="col-span-3 text-text-muted text-xs font-medium">
                 Role
               </span>
-              <span className="col-span-3 text-gray-500 text-xs font-medium">
+              <span className="col-span-3 text-text-muted text-xs font-medium">
                 Company
               </span>
-              <span className="col-span-2 text-gray-500 text-xs font-medium">
+              <span className="col-span-2 text-text-muted text-xs font-medium">
                 Location
               </span>
-              <span className="col-span-2 text-gray-500 text-xs font-medium">
+              <span className="col-span-2 text-text-muted text-xs font-medium">
                 Date
               </span>
-              <span className="col-span-1 text-gray-500 text-xs font-medium">
+              <span className="col-span-2 text-text-muted text-xs font-medium">
                 Status
               </span>
             </div>
+
             {/* Rows */}
             {recent.map((app) => (
               <div
                 key={app.id}
-                className="grid grid-cols-12 gap-4 px-3 py-3 rounded-xl bg-white/8 hover:bg-white/5 transition-colors"
+                className="bg-bg-sidebar/20 grid grid-cols-12 gap-3 px-3 py-3 rounded-xl hover:bg-bg-page transition-colors items-center"
               >
-                <span className="col-span-4 text-white text-sm truncate">
+                <span className="col-span-3 text-text-primary text-sm truncate">
                   {app.role}
                 </span>
-                <span className="col-span-3 text-gray-400 text-sm truncate">
+                <span className="col-span-3 text-text-secondary text-sm truncate">
                   {app.company}
                 </span>
-                <span className="col-span-2 text-gray-400 text-sm truncate">
+                <span className="col-span-2 text-text-secondary text-sm truncate">
                   {app.location || "—"}
                 </span>
-                <span className="col-span-2 text-gray-400 text-sm">
+                <span className="col-span-2 text-text-secondary text-sm">
                   {app.date_applied
                     ? new Date(app.date_applied).toLocaleDateString("en-US", {
                         month: "short",
@@ -72,9 +77,9 @@ export default function ApplicationsTable({ applications }) {
                       })
                     : "—"}
                 </span>
-                <span className="col-span-1">
+                <span className="col-span-2">
                   <span
-                    className={`text-xs px-2.5 py-1 rounded-full font-medium whitespace-nowrap ${STATUS_STYLES[app.status] || ""}`}
+                    className={`inline-block text-xs py-1 rounded-full font-medium whitespace-nowrap ${STATUS_STYLES[app.status] || ""}`}
                   >
                     {app.status}
                   </span>

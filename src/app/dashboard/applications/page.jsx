@@ -7,11 +7,11 @@ import Sidebar from "@/components/Sidebar";
 import AddApplicationModal from "@/components/AddApplicationModal";
 
 const STATUS_STYLES = {
-  Applied: "text-[#6AABED] bg-[#6AABED]/10",
-  Interview: "text-[#AD5FDA] bg-[#AD5FDA]/10",
-  Challenge: "text-[#DBC66A] bg-[#DBC66A]/10",
-  Offer: "text-[#72D562] bg-[#72D562]/10",
-  Rejected: "text-[#DA2C2C] bg-[#DA2C2C]/10",
+  Applied: "text-color-status-applied bg-color-status-applied/15",
+  Interview: "text-color-status-interview bg-color-status-interview/15",
+  Challenge: "text-color-status-challenge bg-color-status-challenge/15",
+  Offer: "text-color-status-offer bg-color-status-offer/15",
+  Rejected: "text-color-status-rejected bg-color-status-rejected/15",
 };
 
 const FILTERS = [
@@ -43,6 +43,7 @@ export default function AllApplications() {
         router.push("/login");
         return;
       }
+
       setUser(session.user);
 
       const { data: profileData } = await supabase
@@ -57,11 +58,12 @@ export default function AllApplications() {
         .from("applications")
         .select("*")
         .eq("user_id", session.user.id)
-        .order("date_applied", { ascending: false });
+        .order("created_at", { ascending: false });
 
       setApplications(appsData || []);
       setLoading(false);
     };
+
     getData();
   }, []);
 
@@ -82,45 +84,43 @@ export default function AllApplications() {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-[#2A2A2A]">
-        <p className="text-gray-400 text-sm">Loading...</p>
+      <div className="h-screen flex items-center justify-center bg-bg-page">
+        <p className="text-text-secondary text-sm">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen bg-[#2B2B2B] overflow-hidden">
+    <div className="flex h-screen bg-bg-page overflow-hidden">
       <Sidebar user={user} profile={profile} />
+
       <main className="flex-1 overflow-y-auto p-8">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-white text-2xl font-semibold">
+            <h1 className="text-text-primary text-2xl font-semibold">
               All Applications
             </h1>
-            <p className="text-gray-500 text-sm mt-1">
+            <p className="text-text-muted text-sm mt-1">
               {applications.length} total · {filtered.length} showing
             </p>
           </div>
           <button
             onClick={() => setShowModal(true)}
-            className="bg-[#323371] hover:bg-[#3d3d8a] text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
+            className="bg-accent hover:bg-accent-hover text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
           >
             + Add application
           </button>
         </div>
 
-        {/* Search + filters */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          {/* Search bar!! */}
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by role, company, or location..."
-            className="flex-1 bg-[#1E1E1E] border border-gray-700 text-white text-sm rounded-xl px-4 py-2.5 outline-none focus:border-[#323371] transition-colors placeholder:text-gray-600"
+            className="flex-1 bg-bg-surface border border-border-default text-text-primary text-sm rounded-xl px-4 py-2.5 outline-none focus:border-accent transition-colors placeholder:text-text-muted"
           />
-          {/* Filter chips */}
+
           <div className="flex items-center gap-2 flex-wrap">
             {FILTERS.map((f) => (
               <button
@@ -128,8 +128,8 @@ export default function AllApplications() {
                 onClick={() => setActiveFilter(f)}
                 className={`text-xs px-3 py-2 rounded-xl border transition-colors ${
                   activeFilter === f
-                    ? "bg-[#323371] border-[#323371] text-white"
-                    : "border-gray-700 text-gray-400 hover:text-white hover:border-gray-500"
+                    ? "bg-accent border-accent text-white"
+                    : "border-border-default text-text-secondary hover:text-text-primary hover:border-border-hover"
                 }`}
               >
                 {f}
@@ -138,35 +138,33 @@ export default function AllApplications() {
           </div>
         </div>
 
-        {/* Table */}
-        <div className="bg-[#1E11E1E] border border-gray-700 rounded-2xl overflow-hidden">
-          {/* Table header */}
-          <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-gray-700 bg-[#1A1A1A]">
-            <span className="col-span-4 text-gray-400 text-xs font-medium">
+        <div className="bg-bg-surface border border-border-default rounded-2xl overflow-hidden">
+          <div className="grid grid-cols-12 gap-3 px-6 py-3 border-b border-border-default bg-bg-sidebar">
+            <span className="col-span-3 text-text-muted text-sm font-medium">
               Role
             </span>
-            <span className="col-span-3 text-gray-400 text-xs font-medium">
+            <span className="col-span-3 text-text-muted text-xs font-medium">
               Company
             </span>
-            <span className="col-span-2 text-gray-400 text-xs font-medium">
+            <span className="col-span-2 text-text-muted text-xs font-medium">
               Location
             </span>
-            <span className="col-span-2 text-gray-400 text-xs font-medium">
+            <span className="col-span-2 text-text-muted text-xs font-medium">
               Date applied
             </span>
-            <span className="col-span-1 text-gray-400 text-xs font-medium">
+            <span className="col-span-2 text-text-muted text-xs font-medium">
               Status
             </span>
           </div>
-          {/* Empty state */}
+
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 gap-2">
-              <p className="text-gray-400 text-sm">
+              <p className="text-text-secondary text-sm">
                 {search || activeFilter !== "All"
                   ? "No applications match your search"
                   : "No applications yet"}
               </p>
-              <p className="text-gray-600 text-xs">
+              <p className="text-text-muted text-xs">
                 {search || activeFilter !== "All"
                   ? "Try adjusting your filters"
                   : 'Click "+ Add application" to get started'}
@@ -177,22 +175,22 @@ export default function AllApplications() {
               {filtered.map((app, index) => (
                 <div
                   key={app.id}
-                  className={`grid grid-cols-12 gap-4 px-6 py-4 hover:bg-white/5 transition-colors ${
+                  className={`grid grid-cols-12 gap-3 px-6 py-4 items-center hover:bg-bg-page transition-colors ${
                     index !== filtered.length - 1
-                      ? "border-b border-gray-700/50"
+                      ? "border-b border-border-default/50"
                       : ""
                   }`}
                 >
-                  <span className="col-span-4 text-white text-sm truncate">
+                  <span className="col-span-3 text-text-primary text-sm truncate">
                     {app.role}
                   </span>
-                  <span className="col-span-3 text-gray-400 text-sm truncate">
+                  <span className="col-span-3 text-text-secondary text-sm truncate">
                     {app.company}
                   </span>
-                  <span className="col-span-2 text-gray-400 text-sm truncate">
+                  <span className="col-span-2 text-text-secondary text-sm truncate">
                     {app.location || "—"}
                   </span>
-                  <span className="col-span-2 text-gray-400 text-sm">
+                  <span className="col-span-2 text-text-secondary text-sm">
                     {app.date_applied
                       ? new Date(app.date_applied).toLocaleDateString("en-US", {
                           month: "short",
@@ -201,9 +199,9 @@ export default function AllApplications() {
                         })
                       : "—"}
                   </span>
-                  <span className="col-span-1">
+                  <span className="col-span-2">
                     <span
-                      className={`text-xs px-2.5 py-1 rounded-full font-medium whitespace-nowrap ${STATUS_STYLES[app.status] || ""}`}
+                      className={`inline-block text-xs py-1 rounded-full font-medium whitespace-nowrap ${STATUS_STYLES[app.status] || ""}`}
                     >
                       {app.status}
                     </span>
@@ -214,7 +212,7 @@ export default function AllApplications() {
           )}
         </div>
       </main>
-      {/* Modal */}
+
       {showModal && (
         <AddApplicationModal
           user={user}

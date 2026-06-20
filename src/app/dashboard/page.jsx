@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
-import AddApplicationModal from "@/components/AddApplicationModal";
 import StatCards from "@/components/StatCards";
 import FunnelChart from "@/components/FunnelChart";
 import PipelineView from "@/components/PipelineView";
-import ApplicationsTable from "@/components/ApplicationTable";
+import ApplicationTable from "@/components/ApplicationTable";
+import AddApplicationModal from "@/components/AddApplicationModal";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -58,33 +58,38 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-[#2A2A2A]">
-        <p className="text-gray-400 text-sm">Loading...</p>
+      <div className="h-screen flex items-center justify-center bg-bg-page">
+        <p className="text-text-secondary text-sm">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen bg-[#2B2B2B] overflow-hidden">
-      {/* Sidebar */}
+    <div className="flex h-screen bg-bg-page overflow-hidden">
       <Sidebar user={user} profile={profile} />
+
       <main className="flex-1 overflow-y-auto p-8">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-white text-2xl font-semibold">Dashboard</h1>
+          <h1 className="text-text-primary text-2xl font-semibold">
+            Dashboard
+          </h1>
           <button
             onClick={() => setShowModal(true)}
-            className="bg-[#323371] hover:bg-[#3d3d8a] text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
+            className="bg-accent hover:bg-accent-hover text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
           >
             + Add application
           </button>
         </div>
+
         <StatCards applications={applications} />
         <FunnelChart applications={applications} />
         <PipelineView applications={applications} />
-        <ApplicationsTable applications={applications} />
+        <ApplicationTable
+          applications={applications}
+          onAddNew={() => setShowModal(true)}
+        />
       </main>
 
-      {/* Modal */}
       {showModal && (
         <AddApplicationModal
           user={user}

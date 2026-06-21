@@ -60,7 +60,7 @@ export default function Signup() {
         }}
       >
         <div className="w-full max-w-sm">
-          <div className="bg-bg-surface border border-border-default rounded-2xl px-8 py-10 flex flex-col">
+          <div className="bg-bg-surface shadow-2xl border border-border-default rounded-2xl px-8 py-10 flex flex-col">
             <h1 className="text-text-primary text-2xl font-semibold text-center mb-2">
               Create your account
             </h1>

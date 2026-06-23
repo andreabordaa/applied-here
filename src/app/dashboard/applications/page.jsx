@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter, useSearchParams } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
@@ -27,7 +27,7 @@ const FILTERS = [
   "Rejected",
 ];
 
-export default function AllApplications() {
+function AllApplicationsInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [user, setUser] = useState(null);
@@ -232,5 +232,19 @@ export default function AllApplications() {
         />
       )}
     </div>
+  );
+}
+
+export default function AllApplications() {
+  return (
+    <Suspense
+      fallback={
+        <div className="h-screen flex items-center justify-center bg-bg-page">
+          <p className="text-text-secondary text-sm">Loading...</p>
+        </div>
+      }
+    >
+      <AllApplicationsInner />
+    </Suspense>
   );
 }

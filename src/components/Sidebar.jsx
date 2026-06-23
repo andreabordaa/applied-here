@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import { GoHomeFill } from "react-icons/go";
@@ -24,6 +24,8 @@ const STATUS_DOTS = [
 export default function Sidebar({ user, profile }) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const activeStatus = searchParams.get("status");
   const [isOpen, setIsOpen] = useState(true);
 
   const handleLogout = async () => {
@@ -81,7 +83,7 @@ export default function Sidebar({ user, profile }) {
         <Link
           href="/dashboard/applications"
           className={`flex items-center gap-3 px-2.5 py-2 rounded-lg transition-colors ${
-            pathname === "/dashboard/applications"
+            pathname === "/dashboard/applications" && !activeStatus
               ? "bg-bg-surface text-text-primary"
               : "text-text-secondary hover:text-text-primary hover:bg-bg-surface/50"
           }`}
@@ -99,22 +101,33 @@ export default function Sidebar({ user, profile }) {
         )}
 
         <div className={`flex flex-col gap-1 ${!isOpen ? "mt-4" : ""}`}>
-          {STATUS_DOTS.map((s) => (
-            <div
-              key={s.label}
-              className="flex items-center gap-2.5 px-3.5 py-1.5"
-            >
-              <div
-                className="w-2.5 h-2.5 rounded-full shrink-0"
-                style={{ backgroundColor: s.color }}
-              />
-              {isOpen && (
-                <span className="text-text-secondary text-sm whitespace-nowrap">
-                  {s.label}
-                </span>
-              )}
-            </div>
-          ))}
+          {STATUS_DOTS.map((s) => {
+            const isActive =
+              pathname === "/dashboard/applications" &&
+              activeStatus === s.label;
+
+            return (
+              <Link
+                key={s.label}
+                href={`/dashboard/applications?status=${encodeURIComponent(s.label)}`}
+                className={`flex items-center gap-2.5 px-3.5 py-1.5 rounded-lg transition-colors ${
+                  isActive ? "bg-bg-surface" : "hover:bg-bg-surface/50"
+                }`}
+              >
+                <div
+                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                  style={{ backgroundColor: s.color }}
+                />
+                {isOpen && (
+                  <span
+                    className={`text-sm whitespace-nowrap ${isActive ? "text-text-primary" : "text-text-secondary"}`}
+                  >
+                    {s.label}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
         </div>
       </nav>
 
@@ -122,7 +135,10 @@ export default function Sidebar({ user, profile }) {
         {isOpen ? (
           // Expanded — avatar + name/email on left, logout on right
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2.5 overflow-hidden">
+            <Link
+              href="/dashboard/settings"
+              className="flex items-center gap-2.5 overflow-hidden hover:opacity-80 transition-opacity"
+            >
               <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white text-xs font-medium shrink-0">
                 {profile?.full_name?.[0]?.toUpperCase() ||
                   user?.email?.[0]?.toUpperCase()}
@@ -135,7 +151,7 @@ export default function Sidebar({ user, profile }) {
                   {user?.email}
                 </p>
               </div>
-            </div>
+            </Link>
 
             <div className="relative group shrink-0">
               <button
@@ -152,10 +168,13 @@ export default function Sidebar({ user, profile }) {
         ) : (
           // Collapsed — avatar on top, logout icon below, both centered
           <div className="flex flex-col items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white text-xs font-medium shrink-0">
+            <Link
+              href="/dashboard/settings"
+              className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white text-xs font-medium shrink-0 hover:opacity-80 transition-opacity"
+            >
               {profile?.full_name?.[0]?.toUpperCase() ||
                 user?.email?.[0]?.toUpperCase()}
-            </div>
+            </Link>
 
             <div className="relative group">
               <button

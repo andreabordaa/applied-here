@@ -35,7 +35,7 @@ export default function Dashboard() {
         .from("profiles")
         .select("full_name, email")
         .eq("id", session.user.id)
-        .single();
+        .maybeSingle();
 
       setProfile(profileData);
 

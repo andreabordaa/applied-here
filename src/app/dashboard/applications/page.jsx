@@ -2,16 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import AddApplicationModal from "@/components/AddApplicationModal";
 
 const STATUS_STYLES = {
-  Applied: "text-color-status-applied bg-color-status-applied/15",
-  Interview: "text-color-status-interview bg-color-status-interview/15",
-  Challenge: "text-color-status-challenge bg-color-status-challenge/15",
-  Offer: "text-color-status-offer bg-color-status-offer/15",
-  Rejected: "text-color-status-rejected bg-color-status-rejected/15",
+  Applied:
+    "text-[var(--color-status-applied)] bg-[var(--color-status-applied)]/15",
+  Interview:
+    "text-[var(--color-status-interview)] bg-[var(--color-status-interview)]/15",
+  Challenge:
+    "text-[var(--color-status-challenge)] bg-[var(--color-status-challenge)]/15",
+  Offer: "text-[var(--color-status-offer)] bg-[var(--color-status-offer)]/15",
+  Rejected:
+    "text-[var(--color-status-rejected)] bg-[var(--color-status-rejected)]/15",
 };
 
 const FILTERS = [
@@ -25,6 +29,7 @@ const FILTERS = [
 
 export default function AllApplications() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [applications, setApplications] = useState([]);
@@ -32,6 +37,12 @@ export default function AllApplications() {
   const [showModal, setShowModal] = useState(false);
   const [activeFilter, setActiveFilter] = useState("All");
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const statusParam = searchParams.get("status");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setActiveFilter(statusParam || "All");
+  }, [searchParams]);
 
   useEffect(() => {
     const getData = async () => {
@@ -50,7 +61,7 @@ export default function AllApplications() {
         .from("profiles")
         .select("full_name, email")
         .eq("id", session.user.id)
-        .single();
+        .maybeSingle();
 
       setProfile(profileData);
 
@@ -201,7 +212,7 @@ export default function AllApplications() {
                   </span>
                   <span className="col-span-2">
                     <span
-                      className={`inline-block text-xs py-1 rounded-full font-medium whitespace-nowrap ${STATUS_STYLES[app.status] || ""}`}
+                      className={`inline-block text-xs px-2.5 py-1 rounded-full font-medium whitespace-nowrap ${STATUS_STYLES[app.status] || ""}`}
                     >
                       {app.status}
                     </span>
